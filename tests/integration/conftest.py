@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import AbstractEventLoop
 from typing import AsyncGenerator
 
 import pytest
@@ -23,7 +24,7 @@ def test_settings() -> AppSettings:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def event_loop() -> asyncio.AbstractEventLoop:
+async def event_loop() -> AsyncGenerator[AbstractEventLoop, None]:
     """Fixes error:
     ```ScopeMismatch: You tried to access the 'function' scoped fixture 'event_loop'
     with a 'session' scoped request object, involved factories```
@@ -34,7 +35,10 @@ def event_loop() -> asyncio.AbstractEventLoop:
     """
     loop = asyncio.get_event_loop_policy().new_event_loop()
     asyncio.set_event_loop(loop)
-    return loop
+    try:
+        yield loop
+    finally:
+        loop.close()
 
 
 @pytest.fixture(scope="session")

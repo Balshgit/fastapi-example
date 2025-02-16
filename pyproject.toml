@@ -41,7 +41,7 @@ factory-boy = "^3.3"
 Faker = "^35"
 
 pytest = "^8.3"
-pytest-asyncio = "^0.15.1" # > 0.15.1 provides unclosed connections and freezes in CI
+pytest-asyncio = "^0.25"
 pytest-deadfixtures = "^2.2"
 pytest-mock = "^3.14"
 pytest-cov = "^5.0"
@@ -146,10 +146,12 @@ sort = "cover"
 skip_covered = true
 
 [tool.pytest.ini_options]
+asyncio_mode = "auto"
+minversion = "8.0"
+testpaths = "tests"
 filterwarnings = [
     "ignore::pytest.PytestUnraisableExceptionWarning",
 ]
-
 
 [tool.mypy]
 # Mypy configuration:
