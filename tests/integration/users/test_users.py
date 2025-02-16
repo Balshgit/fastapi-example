@@ -103,8 +103,14 @@ async def test_update_users_by_id_for_anonym(
     rest_client: AsyncClient,
 ) -> None:
     user = UserFactory()
+    username = user.username
     response = await rest_client.put(f"/api/users/{user.id}", json={"username": "Вася"})
     assert response.status_code == 403
+
+    sync_db.refresh(user)
+    updated_user = sync_db.execute(select(User).where(User.id == user.id)).scalar()
+
+    assert updated_user.username == username
 
 
 async def test_update_users_by_id(
