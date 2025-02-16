@@ -79,3 +79,21 @@ async def update_user_info(
 
     data = UpdateUserRequestDTO(**user_data.model_dump())
     await user_service.update_user_info(user_data=data, user_id=user_id)
+
+
+@router.delete(
+    "/users/{user_id}",
+    name="users:get_users",
+    status_code=status.HTTP_204_NO_CONTENT,
+    response_class=Response,
+    dependencies=[Depends(request_verification)],
+    summary="Удаление пользователя",
+)
+@inject
+async def delete_user(
+    user_id: int,
+    user_service: UserService = Depends(AsyncProvide[DIContainer.services.user_service]),
+) -> None:
+    """Изменить данные пользователя"""
+
+    await user_service.delete_user(user_id=user_id)

@@ -1,5 +1,5 @@
 import os
-from functools import lru_cache, cached_property
+from functools import cached_property, lru_cache
 
 from dotenv import load_dotenv
 from pydantic import SecretStr
@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL as DB_URL
 from yarl import URL
 
-from app.core.constants import StageEnum, LogLevelEnum
+from app.core.constants import LogLevelEnum, StageEnum
 
 
 class BaseAppSettings(BaseSettings):
@@ -71,7 +71,7 @@ class RedisSettings(BaseSettings):
         path = f"/{self.REDIS_DATABASE}" if self.REDIS_DATABASE is not None else ""
 
         return URL.build(
-            scheme='redis',
+            scheme="redis",
             host=self.REDIS_HOST,
             port=self.REDIS_PORT,
             password=self.REDIS_PASSWORD.get_secret_value(),
@@ -83,9 +83,6 @@ class AppSettings(BaseAppSettings, DataBaseSettings, UsersSettings, RedisSetting
     DEBUG: bool = False
     APP_HOST: str
     APP_PORT: int
-
-
-
 
     model_config = SettingsConfigDict(case_sensitive=True)
 

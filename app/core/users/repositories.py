@@ -2,7 +2,7 @@ from dataclasses import asdict, dataclass
 from datetime import timedelta
 
 from loguru import logger
-from sqlalchemy import select, update
+from sqlalchemy import delete, select, update
 
 from app.core.users.dto import UpdateUserRequestDTO, UserDTO
 from app.core.users.models import User
@@ -39,6 +39,12 @@ class UserRepository:
         values = {field: value for field, value in asdict(user_data).items() if field is not None}
         query = update(User).values(**values).where(User.id == user_id)
 
+        async with self.db.session() as session:
+            await session.execute(query)
+            await session.commit()
+
+    async def delete_user_by_id(self, user_id: int) -> None:
+        query = delete(User).where(User.id == user_id)
         async with self.db.session() as session:
             await session.execute(query)
             await session.commit()

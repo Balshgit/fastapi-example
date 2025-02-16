@@ -164,3 +164,49 @@ async def test_get_user_from_cache(
         "email": user.email,
         "is_active": user.is_active,
     }
+
+
+async def test_delete_user_for_anonym(
+    sync_db: Session,
+    rest_client: AsyncClient,
+) -> None:
+    users = UserFactory.create_batch(size=3)
+
+    response = await rest_client.delete(f"/api/users/{users[0]}")
+    assert response.status_code == 403
+
+    users = sync_db.execute(select(User)).all()
+    assert len(users) == 3
+
+
+async def test_delete_not_existing_user(
+    sync_db: Session,
+    user_client: AsyncClient,
+) -> None:
+    UserFactory.create_batch(size=3)
+
+    response = await user_client.delete("/api/users/9999")
+    assert response.status_code == 204
+
+    users = sync_db.execute(select(User)).all()
+
+    assert len(users) == 3
+
+
+async def test_delete_user(
+    sync_db: Session,
+    user_client: AsyncClient,
+) -> None:
+    user = UserFactory()
+    UserFactory.create_batch(size=2)
+
+    response = await user_client.delete(f"/api/users/{user.id}")
+    assert response.status_code == 204
+
+    deleted_user = sync_db.execute(select(User).where(User.id == user.id)).scalar()
+    assert deleted_user is None
+
+    users = sync_db.execute(select(User)).all()
+
+    assert len(users) == 2
+    assert user not in users

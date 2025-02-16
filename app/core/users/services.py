@@ -34,3 +34,6 @@ class UserService:
 
     async def update_user_info(self, user_data: UpdateUserRequestDTO, user_id: int) -> None:
         await self.user_repository.update_user_info(user_id=user_id, user_data=user_data)
+
+    async def delete_user(self, user_id: int) -> None:
+        await self.user_repository.delete_user_by_id(user_id=user_id)

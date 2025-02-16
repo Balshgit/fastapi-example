@@ -7,7 +7,7 @@ RESET  := $(shell tput -Txterm sgr0)
 .DEFAULT_GOAL := help
 .PHONY: help app format lint check-style lint-typing lint-complexity lint-deps up-dependencies down-dependencies
 
-PYTHON_TARGETS = app tests
+PYTHON_TARGETS = app tests settings
 PORT=8000
 
 ## Запустить приложение
