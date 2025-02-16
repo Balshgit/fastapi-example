@@ -19,13 +19,21 @@ class UserRepository:
 
         async with self.db.session() as session:
             result = await session.execute(query)
-            return result.scalars().all()
+            return list(result.scalars().all())
 
-    async def get_user_by_id(self, user_id: int) -> User:
+    async def get_user_by_id(self, user_id: int) -> UserDTO:
         query = select(User).where(User.id == user_id)
         async with self.db.session() as session:
             result = await session.execute(query)
-            return result.scalar_one()
+            user = result.scalar_one()
+            return UserDTO(
+                id=user.id,
+                username=user.username,
+                first_name=user.first_name,
+                last_name=user.last_name,
+                email=user.email,
+                is_active=user.is_active,
+            )
 
     async def update_user_info(self, user_data: UpdateUserRequestDTO, user_id: int) -> None:
         values = {field: value for field, value in asdict(user_data).items() if field is not None}

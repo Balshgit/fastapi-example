@@ -1,0 +1,41 @@
+# За объяснениями можно обратиться к следующей ссылке:
+# https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
+# Важно: используй `lefthook install` после изменений в конфигурации хуков!
+
+skip_output:
+  - meta
+  - execution
+
+pre-commit:
+  piped: true
+  commands:
+    1-format:
+      glob: "*.py"
+      run: black {staged_files} &&  ruff check --fix {staged_files}
+      stage_fixed: true
+    2-check-style:
+      glob: "*.py"
+      run: ruff check {staged_files} && black --check {staged_files}
+    3-check-type-hints:
+      tags: slowpoke
+      glob: "*.py"
+      run: mypy app settings tests  # почему-то отличается поведение с {all_files}
+    4-check-complexity:
+      tags: slowpoke
+      glob: "*.py"
+      run: flake8 {staged_files}
+
+pre-push:
+  parallel: true
+  commands:
+    check-style:
+      glob: "*.py"
+      run: ruff check {all_files} && black --check {all_files}
+    check-type-hints:
+      tags: slowpoke
+      glob: "*.py"
+      run: mypy app settings tests  # почему-то отличается поведение с {all_files}
+    check-complexity:
+      tags: slowpoke
+      glob: "*.py"
+      run: flake8 {push_files}

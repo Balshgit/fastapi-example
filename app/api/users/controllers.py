@@ -77,5 +77,5 @@ async def update_user_info(
 ) -> None:
     """Изменить данные пользователя"""
 
-    user_data = UpdateUserRequestDTO(**user_data.model_dump())
-    await user_service.update_user_info(user_data=user_data, user_id=user_id)
+    data = UpdateUserRequestDTO(**user_data.model_dump())
+    await user_service.update_user_info(user_data=data, user_id=user_id)

@@ -1,9 +1,10 @@
 import os
 from pathlib import Path
+from typing import Self
 
 from dependency_injector import containers
 from dependency_injector.providers import Container, Singleton
-from dependency_injector.wiring import Provide, T
+from dependency_injector.wiring import Provide
 
 from app.di.adapters import AdaptersContainer
 from app.di.repositories import RepositoriesContainer
@@ -14,7 +15,7 @@ load_env()
 
 
 class AsyncProvide(Provide):
-    async def __call__(self) -> T:
+    async def __call__(self) -> Self:
         return self
 
 

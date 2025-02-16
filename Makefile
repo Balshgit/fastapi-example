@@ -5,7 +5,7 @@ YELLOW := $(shell tput -Txterm setaf 3)
 RESET  := $(shell tput -Txterm sgr0)
 
 .DEFAULT_GOAL := help
-.PHONY: help app format lint check-style check-import-sorting lint-typing lint-imports lint-complexity lint-deps up-dependencies down-dependencies
+.PHONY: help app format lint check-style lint-typing lint-complexity lint-deps up-dependencies down-dependencies
 
 PYTHON_TARGETS = app tests
 PORT=8000
@@ -30,9 +30,6 @@ format:
 style:
 	ruff check $(PYTHON_TARGETS) && black --check $(PYTHON_TARGETS)
 
-## Проверить сортировку импортов
-check-imports:
-	isort --check-only $(PYTHON_TARGETS)
 
 ## Проверить типизацию
 lint-typing:
@@ -44,11 +41,11 @@ lint-complexity:
 
 ## Запустить линтер ruff
 lint-ruff:
-	ruff $(PYTHON_TARGETS)
+	ruff check $(PYTHON_TARGETS)
 
 
 ## Запустить все линтеры
-lint: lint-typing lint-complexity check-imports lint-ruff
+lint: style lint-typing lint-complexity lint-ruff
 
 ## Show help
 help:

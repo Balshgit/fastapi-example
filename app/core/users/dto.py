@@ -13,7 +13,7 @@ class UpdateUserRequestDTO:
 class UserDTO:
     id: int
     username: str
-    first_name: str
+    first_name: str | None
     last_name: str | None
     email: str
     is_active: bool

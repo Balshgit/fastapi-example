@@ -11,7 +11,7 @@ class ServicesContainer(containers.DeclarativeContainer):
     repositories = providers.DependenciesContainer()
     adapters = providers.DependenciesContainer()
 
-    user_service: Singleton = Singleton(
+    user_service: Singleton[UserService] = Singleton(
         UserService,
         user_repository=repositories.user_repository,
         user_cache_repository=repositories.user_cache_repository,

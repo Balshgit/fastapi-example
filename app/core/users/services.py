@@ -13,7 +13,7 @@ class UserService:
     async def get_all_users(self) -> list[User]:
         return await self.user_repository.get_all_users()
 
-    async def get_user_by_id(self, user_id: int) -> User:
+    async def get_user_by_id(self, user_id: int) -> UserDTO:
 
         if (user := await self.user_cache_repository.get_user_by_id(user_id=user_id)) is not None:
             return user
